@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Any, Dict
 
 from biblioteca import Biblioteca
-from estudiante import Estudiante
-from excepciones import DatosInvalidosError
-from material import Libro, Revista
+from src.estudiante import Estudiante
+from src.excepciones import DatosInvalidosError
+from src.material import Libro, Revista
 
 # El archivo se busca junto a este módulo, sin importar desde qué carpeta
 

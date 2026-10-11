@@ -1,9 +1,9 @@
 """Punto de entrada del sistema. Ejecutar con:  python main.py"""
 
 from biblioteca import Biblioteca
-from datos import cargar_datos
-from excepciones import DatosInvalidosError
-from menu import ejecutar_menu
+from src.datos import cargar_datos
+from src.excepciones import DatosInvalidosError
+from src.menu import ejecutar_menu
 
 
 def main() -> None:

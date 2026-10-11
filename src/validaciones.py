@@ -1,6 +1,6 @@
 """Funciones de validación reutilizables por varias clases."""
 
-from excepciones import DatosInvalidosError
+from src.excepciones import DatosInvalidosError
 
 
 def validar_texto(valor: str, campo: str) -> str:

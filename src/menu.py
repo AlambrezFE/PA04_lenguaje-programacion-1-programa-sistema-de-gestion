@@ -3,9 +3,9 @@
 from typing import Callable, Dict, Optional, Tuple
 
 from biblioteca import Biblioteca
-from estudiante import Estudiante
-from excepciones import DatosInvalidosError
-from material import Libro, MaterialBibliografico, Revista
+from src.estudiante import Estudiante
+from src.excepciones import DatosInvalidosError
+from src.material import Libro, MaterialBibliografico, Revista
 
 
 def leer_entero(mensaje: str) -> int:

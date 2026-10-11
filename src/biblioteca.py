@@ -3,14 +3,14 @@
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from estudiante import Estudiante
-from excepciones import (
+from src.estudiante import Estudiante
+from src.excepciones import (
     DatosInvalidosError,
     EstudianteConPendientesError,
     MaterialYaPrestadoError,
 )
-from material import MaterialBibliografico
-from prestamo import Prestamo
+from src.material import MaterialBibliografico
+from src.prestamo import Prestamo
 
 
 class Biblioteca:

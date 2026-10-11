@@ -9,8 +9,8 @@ MaterialBibliografico (ABC)
 from abc import ABC, abstractmethod
 import uuid
 
-from excepciones import DatosInvalidosError
-from validaciones import validar_texto
+from src.excepciones import DatosInvalidosError
+from src.validaciones import validar_texto
 
 
 class MaterialBibliografico(ABC):

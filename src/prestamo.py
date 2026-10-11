@@ -3,13 +3,13 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from estudiante import Estudiante
-from excepciones import (
+from src.estudiante import Estudiante
+from src.excepciones import (
     DatosInvalidosError,
     EstudianteConPendientesError,
     MaterialYaPrestadoError,
 )
-from material import MaterialBibliografico
+from src.material import MaterialBibliografico
 
 
 class Prestamo:

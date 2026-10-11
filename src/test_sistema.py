@@ -4,15 +4,15 @@ from datetime import datetime, timedelta
 import unittest
 
 from biblioteca import Biblioteca
-from datos import cargar_datos
-from estudiante import Estudiante
-from excepciones import (
+from src.datos import cargar_datos
+from src.estudiante import Estudiante
+from src.excepciones import (
     DatosInvalidosError,
     EstudianteConPendientesError,
     MaterialYaPrestadoError,
 )
-from material import Libro, MaterialBibliografico, Revista
-from prestamo import Prestamo
+from src.material import Libro, MaterialBibliografico, Revista
+from src.prestamo import Prestamo
 
 
 class BaseTest(unittest.TestCase):

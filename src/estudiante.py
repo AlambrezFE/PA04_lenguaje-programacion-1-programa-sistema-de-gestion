@@ -2,11 +2,11 @@
 
 from typing import TYPE_CHECKING, List
 
-from validaciones import validar_texto
+from src.validaciones import validar_texto
 
 # Solo se importa para los type hints; así se evita una importación circular con prestamo.py (que a su vez importa este módulo).
 if TYPE_CHECKING:
-    from prestamo import Prestamo
+    from src.prestamo import Prestamo
 
 
 class Estudiante:
