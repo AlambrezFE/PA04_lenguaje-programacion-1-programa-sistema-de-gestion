@@ -1,0 +1,34 @@
+{
+  "libros": [
+    {"titulo": "Introducción a Python", "autor": "Laura Gómez",
+     "isbn": "ISBN-001", "cantidad": 2},
+    {"titulo": "Cálculo I", "autor": "Pedro Salas",
+     "isbn": "ISBN-002", "cantidad": 1},
+    {"titulo": "Estructuras de Datos", "autor": "María Ríos",
+     "isbn": "ISBN-003", "cantidad": 3},
+    {"titulo": "Derecho Civil", "autor": "Jorge Vega",
+     "isbn": "ISBN-004", "cantidad": 1}
+  ],
+  "revistas": [
+    {"titulo": "Ciencia Hoy", "editorial": "Editorial Andes", "numero": 45,
+     "issn": "ISSN-1001", "cantidad": 2},
+    {"titulo": "Tecnología Actual", "editorial": "Editorial Sur",
+     "numero": 12, "issn": "ISSN-1002", "cantidad": 1}
+  ],
+  "estudiantes": [
+    {"codigo": "E001", "nombre": "Ana Torres",
+     "carrera": "Ingeniería de Sistemas"},
+    {"codigo": "E002", "nombre": "Luis Rojas",
+     "carrera": "Ingeniería Civil"},
+    {"codigo": "E003", "nombre": "Marta Quispe", "carrera": "Medicina"},
+    {"codigo": "E004", "nombre": "Carlos Mamani", "carrera": "Derecho"}
+  ],
+  "prestamos": [
+    {"estudiante": "E001", "material": "ISBN-001", "dias_atras": 2,
+     "devuelto": false},
+    {"estudiante": "E002", "material": "ISBN-002", "dias_atras": 10,
+     "devuelto": false},
+    {"estudiante": "E003", "material": "ISSN-1001", "dias_atras": 6,
+     "devuelto": true}
+  ]
+}
