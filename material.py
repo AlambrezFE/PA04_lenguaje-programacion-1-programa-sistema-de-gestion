@@ -34,7 +34,7 @@ class MaterialBibliografico(ABC):
         self._stock_disponible: int = cantidad  # ejemplares en estante
         self._prestado: bool = False            # True si no queda ninguno
 
-    # ---------- Properties ----------
+    # Properties 
     @property
     def id(self) -> str:
         return self._id
@@ -49,7 +49,6 @@ class MaterialBibliografico(ABC):
 
     @property
     def codigo(self) -> str:
-        """Identificador único (ISBN en libros, ISSN en revistas)."""
         return self._codigo
 
     @property
@@ -64,7 +63,7 @@ class MaterialBibliografico(ABC):
     def prestado(self) -> bool:
         return self._prestado
 
-    # ---------- Parte abstracta: cada hijo debe implementarla ----------
+    # Parte abstracta: cada hijo debe implementarla
     @property
     @abstractmethod
     def plazo_dias(self) -> int:
@@ -87,12 +86,13 @@ class MaterialBibliografico(ABC):
     def esta_prestado(self) -> bool:
         """True si no queda ningún ejemplar disponible."""
 
-    # ---------- Lógica común (protegida: solo para las clases hijas) ----
+    # Lógica común (protegida: solo para las clases hijas)
+    
     def _descontar_stock(self) -> bool:
-        if self._stock_disponible <= 0:     # restricción: stock en cero
+        if self._stock_disponible <= 0: 
             return False
         self._stock_disponible -= 1
-        if self._stock_disponible == 0:     # era el último ejemplar
+        if self._stock_disponible == 0:    
             self._prestado = True
         return True
 
@@ -105,7 +105,6 @@ class MaterialBibliografico(ABC):
         return True
 
     def estado(self) -> str:
-        """Texto con el estado actual del material."""
         if self._prestado:
             return "PRESTADO (sin ejemplares disponibles)"
         return (f"DISPONIBLE ({self._stock_disponible} de "
@@ -113,7 +112,7 @@ class MaterialBibliografico(ABC):
 
 
 class Libro(MaterialBibliografico):
-    """Libro del catálogo. Plazo de préstamo: 7 días."""
+    # Libro del catálogo. Plazo de préstamo: 7 días.
 
     PLAZO_DIAS: int = 7
 
@@ -157,7 +156,7 @@ class Libro(MaterialBibliografico):
 
 
 class Revista(MaterialBibliografico):
-    """Revista del catálogo. Plazo de préstamo: 3 días."""
+    # Revista del catálogo. Plazo de préstamo: 3 días.
 
     PLAZO_DIAS: int = 3
 

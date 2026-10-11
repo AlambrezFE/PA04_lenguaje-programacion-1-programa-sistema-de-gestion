@@ -20,7 +20,6 @@ def leer_entero(mensaje: str) -> int:
 def _pedir_estudiante_y_material(
     biblioteca: Biblioteca,
 ) -> Tuple[Optional[Estudiante], Optional[MaterialBibliografico]]:
-    """Pide los códigos y busca ambos objetos (None si no existen)."""
     estudiante = biblioteca.buscar_estudiante(
         input("Código de estudiante: ").strip())
     material = biblioteca.buscar_material(
@@ -28,7 +27,7 @@ def _pedir_estudiante_y_material(
     return estudiante, material
 
 
-# ---------- Una función por cada opción del menú ----------
+#  Una función por cada opción del menú 
 def registrar_libro(biblioteca: Biblioteca) -> None:
     libro = Libro(input("Título: "), input("Autor: "), input("ISBN: "),
                   leer_entero("Cantidad de ejemplares: "))
@@ -104,7 +103,7 @@ def mostrar_menu() -> None:
 
 
 def ejecutar_menu(biblioteca: Biblioteca) -> None:
-    """Bucle principal: muestra el menú hasta que el usuario sale."""
+    #Bucle principal para mostrar el menu
     while True:
         mostrar_menu()
         opcion = input("Elija una opción: ").strip()

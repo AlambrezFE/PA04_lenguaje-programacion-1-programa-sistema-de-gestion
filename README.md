@@ -63,6 +63,9 @@ Para empezar sin datos, borre o renombre `datos.json`.
 | `validaciones.py` | Validación de textos |
 | `datos.py` / `datos.json` | Carga y contenido del dataset de ejemplo |
 | `test_sistema.py` | Pruebas automáticas |
+| `[invalido]_prueba_sistema_biblioteca_ver1` | Prueba del programa de la parte 2 de la evaluacion |
+| `[invalido]_prueba_sistema_biblioteca_ver2` | Pruebas del programa de la parte 3 de la evaluacion |
+
 
 ## Pruebas
 
