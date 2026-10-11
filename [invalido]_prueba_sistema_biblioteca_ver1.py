@@ -1,8 +1,6 @@
 """
 SISTEMA DE GESTIÓN PARA BIBLIOTECA UNIVERSITARIA - Versión 1.0
 ================================================================
-Requiere únicamente Python 3.8+ (solo usa la librería estándar).
-Ejecutar con:  python biblioteca.py
 
 Estructura:
     Libro       -> representa un título del catálogo y controla su stock.
@@ -14,16 +12,11 @@ Estructura:
 
 from datetime import datetime, timedelta
 
-# Días de plazo por defecto para devolver un libro
 DIAS_PRESTAMO = 7
 
 
-# ======================================================================
-# CLASE LIBRO
-# ======================================================================
+
 class Libro:
-    """Un libro del catálogo. Los atributos son privados (_) y se
-    exponen mediante properties para proteger la información."""
 
     def __init__(self, id_libro, titulo, autor, isbn, cantidad):
         self._id = id_libro
@@ -32,10 +25,8 @@ class Libro:
         self._isbn = isbn
         self._stock_total = cantidad        # ejemplares que posee la biblioteca
         self._stock_disponible = cantidad   # ejemplares que están en estante
-        # _prestado es True cuando ya NO queda ningún ejemplar disponible
         self._prestado = (cantidad == 0)
 
-    # ---------- Properties (getters y setters) ----------
     @property
     def id(self):
         return self._id
@@ -46,7 +37,6 @@ class Libro:
 
     @titulo.setter
     def titulo(self, valor):
-        # Validación: no se permite un título vacío
         if valor.strip() != "":
             self._titulo = valor.strip()
 
@@ -61,7 +51,6 @@ class Libro:
 
     @property
     def isbn(self):
-        # Solo lectura: el ISBN identifica al libro y no debe cambiar
         return self._isbn
 
     @property
@@ -76,13 +65,11 @@ class Libro:
     def prestado(self):
         return self._prestado
 
-    # ---------- Métodos de negocio ----------
     def prestar(self):
         """Reduce el stock en 1. Devuelve True si pudo prestar."""
-        if self._stock_disponible <= 0:     # Restricción: stock en cero
+        if self._stock_disponible <= 0:    
             return False
         self._stock_disponible -= 1
-        # Si era el último ejemplar, el libro pasa a estado "prestado"
         if self._stock_disponible == 0:
             self._prestado = True
         return True
@@ -107,9 +94,7 @@ class Libro:
                 f"ISBN: {self._isbn} | {self.estado()}")
 
 
-# ======================================================================
-# CLASE ESTUDIANTE
-# ======================================================================
+
 class Estudiante:
     """Un estudiante registrado. Su _id es el código de estudiante."""
 
@@ -143,7 +128,6 @@ class Estudiante:
 
     @property
     def prestamos(self):
-        # Devolvemos una copia para que nadie modifique la lista original
         return list(self._prestamos)
 
     def agregar_prestamo(self, prestamo):
@@ -160,9 +144,7 @@ class Estudiante:
         return f"[{self._id}] {self._nombre} - Carrera: {self._carrera}"
 
 
-# ======================================================================
-# CLASE PRESTAMO
-# ======================================================================
+
 class Prestamo:
     """Relaciona un Estudiante con un Libro y guarda las fechas."""
 
@@ -210,23 +192,18 @@ class Prestamo:
     def realizar_prestamo(self):
         """Valida las reglas y ejecuta el préstamo.
         Devuelve (True/False, mensaje)."""
-        # Regla 1: un estudiante con préstamos vencidos/pendientes no puede pedir otro
         if self._estudiante.tiene_prestamos_pendientes():
             return False, "El estudiante tiene préstamos pendientes de devolución."
 
-        # Regla 2: el libro debe tener ejemplares (esto también evita prestar
-        # un libro ya prestado cuando su stock es cero)
         if self._libro.prestado or self._libro.stock_disponible == 0:
             return False, "El libro no tiene ejemplares disponibles."
 
-        # Si todo está bien: se descuenta stock y se registra en el historial
         self._libro.prestar()
         self._estudiante.agregar_prestamo(self)
         return True, (f"Préstamo registrado. Devolver antes del "
                       f"{self._fecha_estimada.strftime('%d/%m/%Y')}.")
 
     def finalizar(self):
-        """Procesa la devolución. Devuelve (True/False, mensaje)."""
         if self._estado == Prestamo.FINALIZADO:
             return False, "Este préstamo ya fue finalizado."
 
@@ -234,7 +211,6 @@ class Prestamo:
         self._fecha_devolucion = datetime.now()
         self._estado = Prestamo.FINALIZADO
 
-        # Informamos si se entregó con retraso
         if self._fecha_devolucion > self._fecha_estimada:
             dias = (self._fecha_devolucion - self._fecha_estimada).days
             return True, f"Devolución registrada con {dias} día(s) de retraso."
@@ -254,9 +230,6 @@ class Prestamo:
                 f"devolver antes de: {estimada} | {self._estado} ({detalle})")
 
 
-# ======================================================================
-# CLASE BIBLIOTECA (coordina todo y hace cumplir las restricciones)
-# ======================================================================
 class Biblioteca:
     def __init__(self):
         self._libros = {}         # clave: ISBN       -> Libro
@@ -268,7 +241,7 @@ class Biblioteca:
     def registrar_libro(self, titulo, autor, isbn, cantidad):
         if titulo.strip() == "" or autor.strip() == "" or isbn.strip() == "":
             return False, "Título, autor e ISBN son obligatorios."
-        if isbn in self._libros:                         # ISBN único
+        if isbn in self._libros:                       
             return False, "Ya existe un libro con ese ISBN."
         if cantidad < 1:
             return False, "La cantidad debe ser al menos 1."
@@ -282,15 +255,13 @@ class Biblioteca:
     def registrar_estudiante(self, codigo, nombre, carrera):
         if codigo.strip() == "" or nombre.strip() == "" or carrera.strip() == "":
             return False, "Código, nombre y carrera son obligatorios."
-        if codigo in self._estudiantes:                  # código único
+        if codigo in self._estudiantes:                
             return False, "Ya existe un estudiante con ese código."
 
         self._estudiantes[codigo] = Estudiante(codigo, nombre.strip(), carrera.strip())
         return True, f"Estudiante registrado: {nombre.strip()}"
 
-    # ---------- Operaciones ----------
     def prestar_libro(self, codigo, isbn):
-        # Verificamos que ambos existan ("estudiante verificado")
         if codigo not in self._estudiantes:
             return False, "Estudiante no registrado."
         if isbn not in self._libros:
@@ -308,14 +279,12 @@ class Biblioteca:
         if isbn not in self._libros:
             return False, "Libro no encontrado."
 
-        # Buscamos el préstamo ACTIVO de ese estudiante para ese libro
         for p in self._prestamos:
             if (p.estudiante.id == codigo and p.libro.isbn == isbn
                     and p.estado == Prestamo.ACTIVO):
                 return p.finalizar()
         return False, "No hay un préstamo activo de ese libro para el estudiante."
 
-    # ---------- Consultas ----------
     def estado_libro(self, isbn):
         if isbn not in self._libros:
             return "Libro no encontrado."
@@ -338,9 +307,6 @@ class Biblioteca:
         return "\n".join(str(l) for l in self._libros.values())
 
 
-# ======================================================================
-# MENÚ DE CONSOLA
-# ======================================================================
 def leer_entero(mensaje):
     """Pide un número entero; repite hasta que el usuario escriba uno válido."""
     while True:
@@ -398,3 +364,5 @@ def menu():
 
 if __name__ == "__main__":
     menu()
+
+# Eduardo Andre Flores Enao | grupo C

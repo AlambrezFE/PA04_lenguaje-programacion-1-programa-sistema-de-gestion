@@ -57,3 +57,5 @@ def cargar_datos(biblioteca: Biblioteca, ruta: Path = RUTA_DATOS) -> str:
     return (f"Datos de ejemplo cargados: {total_materiales} materiales, "
             f"{len(datos.get('estudiantes', []))} estudiantes, "
             f"{len(datos.get('prestamos', []))} préstamos.")
+
+# Eduardo Andre Flores Enao | grupo C

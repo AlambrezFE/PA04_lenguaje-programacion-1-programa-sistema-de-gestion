@@ -1,22 +1,11 @@
 """Sistema de gestión para biblioteca universitaria - Versión 2.0.
 
-Requiere Python 3.8+ y solo usa la librería estándar.
-Ejecutar con:  python biblioteca.py
-
 Novedades de la versión 2:
     * MaterialBibliografico: clase abstracta (interfaz) creada con ABC.
     * Libro y Revista heredan de ella (plazos de 7 y 3 días).
     * Biblioteca.procesar_prestamo() funciona con cualquier material
       (polimorfismo).
     * Excepciones personalizadas y manejo con try-except.
-
-Estructura:
-    MaterialBibliografico (ABC)
-        |-- Libro     (plazo: 7 días)
-        |-- Revista   (plazo: 3 días)
-    Estudiante   -> usuario de la biblioteca y su historial.
-    Prestamo     -> relaciona un Estudiante con un material.
-    Biblioteca   -> guarda los datos y aplica las reglas del sistema.
 """
 
 from abc import ABC, abstractmethod
@@ -25,9 +14,7 @@ from typing import Dict, List, Optional
 import uuid
 
 
-# ======================================================================
 # EXCEPCIONES PERSONALIZADAS
-# ======================================================================
 class MaterialYaPrestadoError(Exception):
     """El material no tiene ejemplares disponibles para prestar."""
 
@@ -41,8 +28,7 @@ class EstudianteConPendientesError(Exception):
 
 
 def _validar_texto(valor: str, campo: str) -> str:
-    """Devuelve el texto sin espacios sobrantes o lanza un error si
-    está vacío (validación compartida por todas las clases)."""
+    
     if not isinstance(valor, str) or valor.strip() == "":
         raise DatosInvalidosError(f"El campo '{campo}' es obligatorio.")
     return valor.strip()
@@ -52,13 +38,7 @@ def _validar_texto(valor: str, campo: str) -> str:
 # CLASE ABSTRACTA (INTERFAZ)
 # ======================================================================
 class MaterialBibliografico(ABC):
-    """Contrato que deben cumplir todos los materiales de la biblioteca.
-
-    No se puede instanciar directamente: obliga a las clases hijas a
-    implementar prestar(), devolver(), esta_prestado(), plazo_dias y tipo.
-    Aquí también se guardan los datos y la lógica de stock que comparten
-    Libro y Revista, para no repetir código.
-    """
+   
 
     def __init__(self, titulo: str, codigo: str, cantidad: int) -> None:
         if not isinstance(cantidad, int) or cantidad < 1:
@@ -87,7 +67,6 @@ class MaterialBibliografico(ABC):
 
     @property
     def codigo(self) -> str:
-        """Identificador único (ISBN en libros, ISSN en revistas)."""
         return self._codigo
 
     @property
@@ -150,11 +129,9 @@ class MaterialBibliografico(ABC):
                 f"{self._stock_total} ejemplares)")
 
 
-# ======================================================================
 # CLASES HIJAS: LIBRO Y REVISTA
-# ======================================================================
+
 class Libro(MaterialBibliografico):
-    """Libro del catálogo. Plazo de préstamo: 7 días."""
 
     PLAZO_DIAS: int = 7
 
@@ -247,11 +224,8 @@ class Revista(MaterialBibliografico):
                 f"{self.estado()}")
 
 
-# ======================================================================
 # CLASE ESTUDIANTE
-# ======================================================================
 class Estudiante:
-    """Estudiante registrado. Su _id es el código de estudiante."""
 
     def __init__(self, id_estudiante: str, nombre: str,
                  carrera: str) -> None:
@@ -282,7 +256,6 @@ class Estudiante:
 
     @property
     def prestamos(self) -> List["Prestamo"]:
-        # Se devuelve una copia para proteger la lista original
         return list(self._prestamos)
 
     def agregar_prestamo(self, prestamo: "Prestamo") -> None:
@@ -299,11 +272,8 @@ class Estudiante:
         return f"[{self._id}] {self._nombre} - Carrera: {self._carrera}"
 
 
-# ======================================================================
 # CLASE PRESTAMO
-# ======================================================================
 class Prestamo:
-    """Relaciona un Estudiante con un material (Libro o Revista)."""
 
     ACTIVO: str = "ACTIVO"
     FINALIZADO: str = "FINALIZADO"
@@ -350,24 +320,17 @@ class Prestamo:
         return self._estado
 
     def esta_vencido(self) -> bool:
-        """Vencido = sigue activo y ya pasó la fecha estimada."""
         return (self._estado == Prestamo.ACTIVO
                 and datetime.now() > self._fecha_estimada)
 
     def dias_retraso(self) -> int:
-        """Días de retraso (0 si no hay retraso)."""
         fin = self._fecha_devolucion or datetime.now()
         if fin > self._fecha_estimada:
             return (fin - self._fecha_estimada).days
         return 0
 
     def realizar_prestamo(self) -> bool:
-        """Valida las reglas y ejecuta el préstamo.
 
-        Lanza EstudianteConPendientesError o MaterialYaPrestadoError si
-        alguna regla no se cumple.
-        """
-        # Regla: no prestar a quien tiene préstamos vencidos o pendientes
         if self._estudiante.tiene_prestamos_pendientes():
             raise EstudianteConPendientesError(
                 f"{self._estudiante.nombre} tiene préstamos pendientes "
@@ -383,7 +346,6 @@ class Prestamo:
         return True
 
     def finalizar(self) -> bool:
-        """Procesa la devolución: repone el stock y cierra el préstamo."""
         if self._estado == Prestamo.FINALIZADO:
             raise DatosInvalidosError("Este préstamo ya fue finalizado.")
         self._material.devolver()
@@ -406,11 +368,9 @@ class Prestamo:
                 f"{self._estado} ({detalle})")
 
 
-# ======================================================================
 # CLASE BIBLIOTECA
-# ======================================================================
+
 class Biblioteca:
-    """Coordina el catálogo, los estudiantes y los préstamos."""
 
     def __init__(self) -> None:
         self._materiales: Dict[str, MaterialBibliografico] = {}
@@ -423,7 +383,6 @@ class Biblioteca:
         """Resultado en texto de la última operación realizada."""
         return self._ultimo_mensaje
 
-    # ---------- Registros ----------
     def registrar_material(self, material: MaterialBibliografico) -> None:
         """Agrega un Libro o Revista. El código (ISBN/ISSN) es único."""
         if material is None:
@@ -444,30 +403,20 @@ class Biblioteca:
             )
         self._estudiantes[estudiante.id] = estudiante
 
-    # ---------- Búsquedas ----------
     def buscar_material(self, codigo: str) -> Optional[MaterialBibliografico]:
         return self._materiales.get(codigo)
 
     def buscar_estudiante(self, codigo: str) -> Optional[Estudiante]:
         return self._estudiantes.get(codigo)
 
-    # ---------- Operaciones ----------
     def procesar_prestamo(self, material: MaterialBibliografico,
                           estudiante: Estudiante) -> bool:
-        """Presta cualquier tipo de material a un estudiante.
 
-        POLIMORFISMO: solo usa la interfaz de MaterialBibliografico, por
-        lo que funciona igual con Libro, Revista o futuros materiales.
-        Devuelve True si se realizó; si no, False y el motivo queda en
-        ultimo_mensaje.
-        """
         try:
-            # Material None o estudiante None
             if material is None or estudiante is None:
                 raise DatosInvalidosError(
                     "El material o el estudiante no existe (None)."
                 )
-            # Ambos deben estar registrados en esta biblioteca
             if self._materiales.get(material.codigo) is not material:
                 raise DatosInvalidosError("El material no está registrado.")
             if self._estudiantes.get(estudiante.id) is not estudiante:
@@ -491,7 +440,6 @@ class Biblioteca:
 
     def procesar_devolucion(self, material: MaterialBibliografico,
                             estudiante: Estudiante) -> bool:
-        """Cierra el préstamo activo de ese estudiante para ese material."""
         try:
             if material is None or estudiante is None:
                 raise DatosInvalidosError(
@@ -521,7 +469,6 @@ class Biblioteca:
             self._ultimo_mensaje = f"Datos inválidos: {error}"
         return False
 
-    # ---------- Consultas ----------
     def estado_material(self, codigo: str) -> str:
         material = self.buscar_material(codigo)
         if material is None:
@@ -545,11 +492,8 @@ class Biblioteca:
         return "\n".join(str(m) for m in self._materiales.values())
 
 
-# ======================================================================
 # MENÚ DE CONSOLA
-# ======================================================================
 def leer_entero(mensaje: str) -> int:
-    """Pide un entero y repite hasta que el valor sea válido."""
     while True:
         try:
             return int(input(mensaje))
@@ -597,7 +541,6 @@ def menu() -> None:
                     input("Código de estudiante: ").strip())
                 mat = biblioteca.buscar_material(
                     input("ISBN/ISSN del material: ").strip())
-                # Si algo no existe llega None y el método lo maneja
                 if opcion == "4":
                     biblioteca.procesar_prestamo(mat, est)
                 else:
@@ -622,3 +565,5 @@ def menu() -> None:
 
 if __name__ == "__main__":
     menu()
+
+# Eduardo Andre Flores Enao | grupo C

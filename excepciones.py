@@ -11,3 +11,5 @@ class DatosInvalidosError(Exception):
 
 class EstudianteConPendientesError(Exception):
     """El estudiante tiene préstamos vencidos sin devolver."""
+
+# Eduardo Andre Flores Enao | grupo C

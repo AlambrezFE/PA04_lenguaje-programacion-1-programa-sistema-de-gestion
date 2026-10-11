@@ -13,7 +13,7 @@ from material import MaterialBibliografico
 
 
 class Prestamo:
-    """Relaciona un Estudiante con un material (Libro o Revista)."""
+    #Relaciona un Estudiante con un material (Libro o Revista).
 
     ACTIVO: str = "ACTIVO"
     FINALIZADO: str = "FINALIZADO"
@@ -28,6 +28,7 @@ class Prestamo:
         self._material: MaterialBibliografico = material
         self._estudiante: Estudiante = estudiante
         self._fecha_prestamo: datetime = fecha_prestamo or datetime.now()
+       
         # POLIMORFISMO: cada material aporta su propio plazo
         self._fecha_estimada: datetime = self._fecha_prestamo + timedelta(
             days=material.plazo_dias
@@ -60,31 +61,26 @@ class Prestamo:
         return self._estado
 
     def esta_activo(self) -> bool:
-        """True si el préstamo aún no fue devuelto."""
+        #True si el préstamo aún no fue devuelto.
         return self._estado == Prestamo.ACTIVO
 
     def esta_vencido(self) -> bool:
-        """Vencido = sigue activo y ya pasó la fecha estimada."""
+        #Vencido = sigue activo y ya pasó la fecha estimada.
         return self.esta_activo() and datetime.now() > self._fecha_estimada
 
     def dias_retraso(self) -> int:
-        """Días de retraso (0 si no hay retraso)."""
+        #Días de retraso (0 si no hay retraso).
         fin = self._fecha_devolucion or datetime.now()
         if fin > self._fecha_estimada:
             return (fin - self._fecha_estimada).days
         return 0
 
     def realizar_prestamo(self) -> bool:
-        """Valida las reglas y ejecuta el préstamo.
-
-        Lanza EstudianteConPendientesError o MaterialYaPrestadoError si
-        alguna regla no se cumple.
-        """
-        # Regla: no prestar a quien tiene préstamos vencidos o pendientes
-        if self._estudiante.tiene_prestamos_pendientes():
+        # Regla: no prestar a quien tiene préstamos vencidos sin devolver
+        if self._estudiante.tiene_prestamos_vencidos():
             raise EstudianteConPendientesError(
-                f"{self._estudiante.nombre} tiene préstamos pendientes "
-                "de devolución."
+                f"{self._estudiante.nombre} tiene préstamos vencidos "
+                "sin devolver."
             )
         # Regla: no prestar un material sin ejemplares disponibles
         if self._material.esta_prestado():
@@ -96,7 +92,7 @@ class Prestamo:
         return True
 
     def finalizar(self) -> bool:
-        """Procesa la devolución: repone el stock y cierra el préstamo."""
+        #Procesa la devolución: repone el stock y cierra el préstamo.
         if not self.esta_activo():
             raise DatosInvalidosError("Este préstamo ya fue finalizado.")
         self._material.devolver()
@@ -117,3 +113,5 @@ class Prestamo:
         return (f"[{self._material.tipo}] '{self._material.titulo}' | "
                 f"salida: {salida} | devolver antes de: {estimada} | "
                 f"{self._estado} ({detalle})")
+
+# Eduardo Andre Flores Enao | grupo C

@@ -14,13 +14,6 @@ from validaciones import validar_texto
 
 
 class MaterialBibliografico(ABC):
-    """Contrato que deben cumplir todos los materiales de la biblioteca.
-
-    No se puede instanciar directamente: obliga a las clases hijas a
-    implementar prestar(), devolver(), esta_prestado(), plazo_dias y tipo.
-    Aquí también se guardan los datos y la lógica de stock que comparten
-    Libro y Revista, para no repetir código.
-    """
 
     def __init__(self, titulo: str, codigo: str, cantidad: int) -> None:
         if not isinstance(cantidad, int) or cantidad < 1:
@@ -203,3 +196,5 @@ class Revista(MaterialBibliografico):
         return (f"[Revista] '{self._titulo}' N.º {self._numero} - "
                 f"{self._editorial} | ISSN: {self._codigo} | "
                 f"{self.estado()}")
+
+# Eduardo Andre Flores Enao | grupo C

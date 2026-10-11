@@ -12,3 +12,5 @@ def validar_texto(valor: str, campo: str) -> str:
     if not isinstance(valor, str) or valor.strip() == "":
         raise DatosInvalidosError(f"El campo '{campo}' es obligatorio.")
     return valor.strip()
+
+# Eduardo Andre Flores Enao | grupo C

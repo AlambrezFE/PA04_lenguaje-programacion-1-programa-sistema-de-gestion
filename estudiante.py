@@ -63,3 +63,5 @@ class Estudiante:
 
     def __str__(self) -> str:
         return f"[{self._id}] {self._nombre} - Carrera: {self._carrera}"
+
+# Eduardo Andre Flores Enao | grupo C

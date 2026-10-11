@@ -160,3 +160,5 @@ class Biblioteca:
                 marca = " | CON PRÉSTAMOS PENDIENTES"
             lineas.append(str(estudiante) + marca)
         return "\n".join(lineas)
+
+# Eduardo Andre Flores Enao | grupo C
