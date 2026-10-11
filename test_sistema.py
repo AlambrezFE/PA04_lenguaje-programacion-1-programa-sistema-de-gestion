@@ -1,9 +1,4 @@
-"""Pruebas de funcionalidad del sistema de biblioteca.
-
-Ejecutar con cualquiera de estas opciones:
-    python test_sistema.py
-    python -m unittest test_sistema -v
-"""
+"""Pruebas de funcionalidad del sistema de biblioteca."""
 
 from datetime import datetime, timedelta
 import unittest
@@ -21,7 +16,7 @@ from prestamo import Prestamo
 
 
 class BaseTest(unittest.TestCase):
-    """Prepara una biblioteca con datos de ejemplo antes de cada prueba."""
+    #Prepara una biblioteca con datos de ejemplo antes de cada prueba.
 
     def setUp(self) -> None:
         self.biblioteca = Biblioteca()
@@ -77,6 +72,7 @@ class TestStock(BaseTest):
         self.biblioteca.registrar_estudiante(julia)
         self.assertTrue(self.biblioteca.procesar_prestamo(libro, self.ana))
         self.assertTrue(self.biblioteca.procesar_prestamo(libro, self.luis))
+        
         # El tercer estudiante ya no encuentra ejemplares
         self.assertFalse(self.biblioteca.procesar_prestamo(libro, julia))
 
@@ -144,13 +140,12 @@ class TestExcepciones(BaseTest):
 
 
 class TestRestricciones(BaseTest):
-    def test_pendiente_bloquea_nuevo_prestamo(self) -> None:
+    def test_prestamo_en_curso_no_bloquea(self) -> None:
+        # Dentro del plazo, el estudiante puede pedir otro material
         self.assertTrue(
             self.biblioteca.procesar_prestamo(self.libro, self.ana))
-        self.assertFalse(
+        self.assertTrue(
             self.biblioteca.procesar_prestamo(self.revista, self.ana))
-        with self.assertRaises(EstudianteConPendientesError):
-            Prestamo(self.revista, self.ana).realizar_prestamo()
 
     def test_prestamo_vencido_bloquea(self) -> None:
         hace_10_dias = datetime.now() - timedelta(days=10)
@@ -159,6 +154,8 @@ class TestRestricciones(BaseTest):
         self.assertTrue(prestamo.esta_vencido())
         self.assertFalse(
             self.biblioteca.procesar_prestamo(self.revista, self.ana))
+        with self.assertRaises(EstudianteConPendientesError):
+            Prestamo(self.revista, self.ana).realizar_prestamo()
 
 
 class TestDevolucion(BaseTest):
@@ -279,10 +276,15 @@ class TestDataset(unittest.TestCase):
         luis = self.biblioteca.buscar_estudiante("E002")
         calculo = self.biblioteca.buscar_material("ISBN-002")
         derecho = self.biblioteca.buscar_material("ISBN-004")
+        estructuras = self.biblioteca.buscar_material("ISBN-003")
+        ana = self.biblioteca.buscar_estudiante("E001")
         # Material ya prestado
         self.assertFalse(self.biblioteca.procesar_prestamo(calculo, carlos))
         # Estudiante con préstamo vencido
         self.assertFalse(self.biblioteca.procesar_prestamo(derecho, luis))
+        # Préstamo en curso (no vencido): puede pedir otro material
+        self.assertTrue(
+            self.biblioteca.procesar_prestamo(estructuras, ana))
         # Caso válido
         self.assertTrue(self.biblioteca.procesar_prestamo(derecho, carlos))
 

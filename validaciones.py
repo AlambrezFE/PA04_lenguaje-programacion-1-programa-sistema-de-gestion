@@ -4,7 +4,8 @@ from excepciones import DatosInvalidosError
 
 
 def validar_texto(valor: str, campo: str) -> str:
-    """Devuelve el texto sin espacios sobrantes.
+    """
+    Devuelve el texto sin espacios sobrantes.
 
     Lanza DatosInvalidosError si no es texto o está vacío.
     """

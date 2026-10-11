@@ -10,4 +10,4 @@ class DatosInvalidosError(Exception):
 
 
 class EstudianteConPendientesError(Exception):
-    """El estudiante tiene préstamos vencidos o sin devolver."""
+    """El estudiante tiene préstamos vencidos sin devolver."""
